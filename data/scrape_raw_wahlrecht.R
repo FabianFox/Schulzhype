@@ -5,6 +5,8 @@
 if(!require("pacman")) install.packages("pacman")
 p_load(tidyverse, rvest, lubridate)
 
+# Scrape polls from wahlrecht.de
+# ---------------------------------------------------------------------------- #
 # (1) Get links to the individual polling institutes
 institute.href <- read_html("https://www.wahlrecht.de/umfragen/index.htm") %>%
   html_nodes(".in a") %>%
@@ -48,4 +50,8 @@ polls <- map(institute.href$link, poll_scraper) %>%
 
 # (4) Name lists and combine in a data set
 polls.df <- polls %>%
-  bind_rows(.id = "institute")
+  bind_rows(.id = "institute") 
+
+# Save data
+# ---------------------------------------------------------------------------- #
+saveRDS(polls.df, "./data/polls.rds")
